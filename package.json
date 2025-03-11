@@ -4,9 +4,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:generate": "drizzle-kit generate",
+    "db:push": "drizzle-kit push"
   },
   "dependencies": {
+    "@electric-sql/pglite": "^0.2.17",
     "dotenv": "^16.4.7",
     "drizzle-orm": "^0.40.0",
     "hono": "^4.7.4",
