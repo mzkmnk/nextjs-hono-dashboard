@@ -11,12 +11,18 @@ importers:
       '@electric-sql/pglite':
         specifier: ^0.2.17
         version: 0.2.17
+      bcryptjs:
+        specifier: ^3.0.2
+        version: 3.0.2
       dotenv:
         specifier: ^16.4.7
         version: 16.4.7
       drizzle-orm:
         specifier: ^0.40.0
         version: 0.40.0(@electric-sql/pglite@0.2.17)(@types/pg@8.11.11)(gel@2.0.1)(pg@8.13.3)(postgres@3.4.5)
+      drizzle-zod:
+        specifier: ^0.7.0
+        version: 0.7.0(drizzle-orm@0.40.0(@electric-sql/pglite@0.2.17)(@types/pg@8.11.11)(gel@2.0.1)(pg@8.13.3)(postgres@3.4.5))(zod@3.24.2)
       hono:
         specifier: ^4.7.4
         version: 4.7.4
@@ -35,6 +41,9 @@ importers:
       react-dom:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
+      zod:
+        specifier: ^3.24.2
+        version: 3.24.2
     devDependencies:
       '@types/node':
         specifier: 18.11.18
@@ -425,6 +434,10 @@ packages:
   '@types/scheduler@0.23.0':
     resolution: {integrity: sha512-YIoDCTH3Af6XM5VuwGG/QL/CJqga1Zm3NkU3HZ4ZHK2fRMPYP1VczsTUqtsf43PH/iJNVlPHAo2oWX7BSdB2Hw==}
 
+  bcryptjs@3.0.2:
+    resolution: {integrity: sha512-k38b3XOZKv60C4E2hVsXTolJWfkGRMbILBIe2IBITXciy5bOsTKot5kDrf3ZfufQtQOUN5mXceUEpU1rTl9Uog==}
+    hasBin: true
+
   buffer-from@1.1.2:
     resolution: {integrity: sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ==}
 
@@ -546,6 +559,12 @@ packages:
         optional: true
       sqlite3:
         optional: true
+
+  drizzle-zod@0.7.0:
+    resolution: {integrity: sha512-xgCRYYVEzRkeXTS33GSMgoowe3vKsMNBjSI+cwG1oLQVEhAWWbqtb/AAMlm7tkmV4fG/uJjEmWzdzlEmTgWOoQ==}
+    peerDependencies:
+      drizzle-orm: '>=0.36.0'
+      zod: '>=3.0.0'
 
   env-paths@3.0.0:
     resolution: {integrity: sha512-dtJUTepzMW3Lm/NPxRf3wP4642UWhjL2sQxc+ym2YMj1m/H2zDNQOlezafzkHwn6sMstjHTwG6iQQsctDW/b1A==}
@@ -782,6 +801,9 @@ packages:
     resolution: {integrity: sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ==}
     engines: {node: '>=0.4'}
 
+  zod@3.24.2:
+    resolution: {integrity: sha512-lY7CDW43ECgW9u1TcT3IoXHflywfVqDYze4waEz812jR/bZ8FHDsl7pFQoSZTz5N+2NqRXs8GBwnAwo3ZNxqhQ==}
+
 snapshots:
 
   '@drizzle-team/brocli@0.10.2': {}
@@ -993,6 +1015,8 @@ snapshots:
 
   '@types/scheduler@0.23.0': {}
 
+  bcryptjs@3.0.2: {}
+
   buffer-from@1.1.2: {}
 
   busboy@1.6.0:
@@ -1028,6 +1052,11 @@ snapshots:
       gel: 2.0.1
       pg: 8.13.3
       postgres: 3.4.5
+
+  drizzle-zod@0.7.0(drizzle-orm@0.40.0(@electric-sql/pglite@0.2.17)(@types/pg@8.11.11)(gel@2.0.1)(pg@8.13.3)(postgres@3.4.5))(zod@3.24.2):
+    dependencies:
+      drizzle-orm: 0.40.0(@electric-sql/pglite@0.2.17)(@types/pg@8.11.11)(gel@2.0.1)(pg@8.13.3)(postgres@3.4.5)
+      zod: 3.24.2
 
   env-paths@3.0.0: {}
 
@@ -1273,3 +1302,5 @@ snapshots:
       isexe: 3.1.1
 
   xtend@4.0.2: {}
+
+  zod@3.24.2: {}
