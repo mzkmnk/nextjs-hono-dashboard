@@ -7,9 +7,8 @@ import { eq } from "drizzle-orm";
 import { v4 as uuidv4 } from "uuid";
 import { verify } from "hono/jwt";
 import { JWTPayload } from "hono/dist/types/utils/jwt/types";
-import { setCookie } from "hono/cookie";
 import { HTTPException } from "hono/http-exception";
-import { createAccessToken, createRefreshToken } from "./utils";
+import { setCookies } from "./utils";
 
 const app = new Hono();
 
@@ -30,11 +29,7 @@ app.post("/sign-in", async (c) => {
     throw new HTTPException(400, { message: "Password not match" });
   }
 
-  const token = await createAccessToken(user.id);
-  const refreshToken = await createRefreshToken(user.id);
-
-  setCookie(c, "accessToken", token);
-  setCookie(c, "refreshToken", refreshToken);
+  await setCookies(user.id, c);
 
   c.status(200);
 
@@ -81,8 +76,7 @@ app.get("/refresh", async (c) => {
     throw new HTTPException(401, { message: "User not found" });
   }
 
-  setCookie(c, "accessToken", await createAccessToken(user.id));
-  setCookie(c, "refreshToken", await createRefreshToken(user.id));
+  await setCookies(user.id, c);
 
   c.status(200);
 
