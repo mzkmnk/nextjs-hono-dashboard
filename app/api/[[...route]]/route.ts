@@ -1,7 +1,6 @@
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
-import { db } from "@/db/index";
-import auth from "./auth";
+import auth from "./auth/route";
 export const runtime = "nodejs";
 
 const app = new Hono().basePath("/api");
