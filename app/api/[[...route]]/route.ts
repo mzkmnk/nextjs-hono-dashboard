@@ -1,13 +1,11 @@
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
-import auth from "./auth";
+import { authRoute } from "./auth";
 export const runtime = "nodejs";
 
-const app = new Hono().basePath("/api");
+const app = new Hono().basePath('/api').route("/auth",authRoute);
 
-const route = app.route("/auth", auth);
-
-export type AppType = typeof route;
+export type AppType = typeof app;
 
 export const GET = handle(app);
 export const POST = handle(app);
