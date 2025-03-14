@@ -9,15 +9,22 @@ import { verify } from "hono/jwt";
 import { JWTPayload } from "hono/dist/types/utils/jwt/types";
 import { HTTPException } from "hono/http-exception";
 import { setCookies } from "./utils";
+import { zValidator } from "@hono/zod-validator";
 
-const app = new Hono();
+export const authRoute = new Hono()
+  .post(
+    "/signIn",
+    zValidator('json', z.object({
+      email: z.string(),
+      password: z.string(),
+    })),
+    async (c) => {
 
-app.post("/sign-in", async (c) => {
-  const result = userSignUpSchema.parse(await c.req.json());
+    const result = c.req.valid("json");
 
-  const { email, password } = result;
+    const { email, password } = result;
 
-  const [user] = await db.select().from(users).where(eq(users.email, email));
+    const [user] = await db.select().from(users).where(eq(users.email, email));
 
   // not exist user
   if (!user) {
@@ -31,14 +38,11 @@ app.post("/sign-in", async (c) => {
 
   await setCookies(user.id, c);
 
-  c.status(200);
-
   return c.json({
     message: "Successfully signed in",
-  });
-});
-
-app.post("/sign-up", async (c) => {
+  },200);
+})
+.post("/signUp", async (c) => {
   const result = userSignUpSchema.parse(await c.req.json());
 
   const { email, password } = result;
@@ -51,14 +55,11 @@ app.post("/sign-up", async (c) => {
     password: hashedPassword,
   });
 
-  c.status(201);
-
   return c.json({
     message: "User created successfully",
-  });
-});
-
-app.get("/refresh", async (c) => {
+  },201);
+})
+.get("/refresh", async (c) => {
   const refreshToken = c.req.header("refreshToken");
 
   if (!refreshToken) {
@@ -78,42 +79,33 @@ app.get("/refresh", async (c) => {
 
   await setCookies(user.id, c);
 
-  c.status(200);
-
   return c.json({
     message: "Successfully refreshed",
-  });
-});
-
-app.onError((err, c) => {
+  },200);
+})
+.onError((err, c) => {
   if (err instanceof z.ZodError) {
-    c.status(400);
     return c.json({
       message: "required email and password",
-    });
+    },400);
   }
 
   // https://github.com/drizzle-team/drizzle-orm/issues/376
   if (typeof err === "object" && err !== null && "code" in err) {
     if (err.code === "23505") {
-      c.status(409);
       return c.json({
         message: "Email already exists",
-      });
+      },409);
     }
   }
 
   if (err instanceof HTTPException) {
-    c.status(err.status);
     return c.json({
       message: err.message,
-    });
+    },err.status);
   }
 
-  c.status(500);
   return c.json({
     message: "Internal server error",
-  });
+  },500);
 });
-
-export default app;
