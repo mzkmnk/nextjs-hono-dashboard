@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { users, userSignUpSchema } from "@/db/schema";
+import { users, userSchema } from "@/db/schema";
 import { Hono } from "hono";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
@@ -14,10 +14,7 @@ import { zValidator } from "@hono/zod-validator";
 export const authRoute = new Hono()
   .post(
     "/signIn",
-    zValidator('json', z.object({
-      email: z.string(),
-      password: z.string(),
-    })),
+    zValidator('json', userSchema),
     async (c) => {
 
     const result = c.req.valid("json");
@@ -42,9 +39,13 @@ export const authRoute = new Hono()
     message: "Successfully signed in",
   },200);
 })
-.post("/signUp", async (c) => {
-  const result = userSignUpSchema.parse(await c.req.json());
+.post(
+  "/signUp",
+  zValidator('json', userSchema),
+  async (c) => {
 
+  const result = c.req.valid("json");
+  
   const { email, password } = result;
 
   const hashedPassword = await bcrypt.hash(password, 10);
