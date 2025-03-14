@@ -110,8 +110,6 @@ app.onError((err, c) => {
     });
   }
 
-  console.log(err);
-
   c.status(500);
   return c.json({
     message: "Internal server error",
