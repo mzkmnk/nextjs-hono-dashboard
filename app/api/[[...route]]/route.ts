@@ -1,9 +1,9 @@
+import { oauthRoute } from '@/app/api/[[...route]]/oauth'
 import { Hono } from 'hono'
 import { handle } from 'hono/vercel'
-import { authRoute } from './auth'
 export const runtime = 'nodejs'
 
-const app = new Hono().basePath('/api').route('/auth', authRoute)
+const app = new Hono().basePath('/api').route('/oauth', oauthRoute)
 
 export type AppType = typeof app
 

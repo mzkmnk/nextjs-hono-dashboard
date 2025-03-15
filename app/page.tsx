@@ -2,36 +2,8 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { client } from '@/lib/hono'
-import { Loader2 } from 'lucide-react'
-import { useRouter } from 'next/navigation'
-import { useState } from 'react'
 
 export default function Home() {
-  const [email, setEmail] = useState<string>('')
-
-  const [password, setPassword] = useState<string>('')
-
-  const [loading, setLoading] = useState<boolean>(false)
-
-  const router = useRouter()
-
-  const signIn = async () => {
-    setLoading(true)
-
-    const req = await client.api.auth.signIn.$post({
-      json: { email, password },
-    })
-
-    if (req.status === 200) {
-      router.push('/internal/dashboard')
-      return
-    }
-
-    setLoading(false)
-  }
-
   return (
     <div className="flex flex-col items-center justify-center h-screen gap-3">
       <h1 className="text-4xl font-bold">Welcome to Dashboard!</h1>
@@ -50,29 +22,22 @@ export default function Home() {
         </Avatar>
       </div>
 
-      <Input
-        placeholder="Email"
-        className="w-1/4"
-        onChange={(e) => setEmail(e.target.value)}
-      />
-
-      <Input
-        placeholder="Password"
-        type="password"
-        className="w-1/4"
-        onChange={(e) => setPassword(e.target.value)}
-      />
-
-      <Button onClick={signIn} disabled={loading}>
-        {loading ? (
-          <>
-            <Loader2 className="animate-spin" />
-            Please wait...
-          </>
-        ) : (
-          'Sign In'
-        )}
-      </Button>
+      <div className="w-1/4 flex gap-3 flex-col">
+        <Button
+          className="w-full"
+          variant="secondary"
+          onClick={() => {
+            window.location.href = '/api/oauth/github'
+          }}
+        >
+          <img
+            src="icons/github-mark.svg"
+            alt="github"
+            className="w-6 h-6 mr-2"
+          />
+          Github
+        </Button>
+      </div>
     </div>
   )
 }

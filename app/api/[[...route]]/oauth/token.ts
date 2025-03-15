@@ -21,15 +21,24 @@ export const createRefreshToken = async (id: string): Promise<string> => {
   return await sign(jwtPayload, process.env.REFRESH_TOKEN_SECRET!)
 }
 
-export const setCookies = async (id: string, c: Context): Promise<void> => {
-  const token = await createAccessToken(id)
-  const refreshToken = await createRefreshToken(id)
+export const setCookies = (
+  callback: () => { token: string; accessToken: string; refreshToken: string },
+  c: Context,
+): void => {
+  const { token, accessToken, refreshToken } = callback()
 
-  setCookie(c, 'accessToken', token, {
+  setCookie(c, 'token', token, {
     path: '/',
     httpOnly: true,
     sameSite: 'Lax',
   })
+
+  setCookie(c, 'accessToken', accessToken, {
+    path: '/',
+    httpOnly: true,
+    sameSite: 'Lax',
+  })
+
   setCookie(c, 'refreshToken', refreshToken, {
     path: '/',
     httpOnly: true,
