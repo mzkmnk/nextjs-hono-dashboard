@@ -1,7 +1,9 @@
+import { createOrFindUser } from '@/app/api/[[...route]]/oauth/queries'
 import {
+  createAccessToken,
   createRefreshToken,
   setCookies,
-} from '@/app/api/[[...route]]/helper/utils'
+} from '@/app/api/[[...route]]/oauth/token'
 import { githubAuth } from '@hono/oauth-providers/github'
 import { Hono } from 'hono'
 import { HTTPException } from 'hono/http-exception'
@@ -19,19 +21,22 @@ export const oauthRoute = new Hono()
   .get('/github', async (c) => {
     const token = c.get('token')
 
-    const user = c.get('user-github')
+    const githubUser = c.get('user-github')
 
-    console.log('user', user)
-
-    if (!token?.token || !user || !user.id) {
+    if (!token?.token || !githubUser) {
       throw new HTTPException(404, { message: 'User not found' })
     }
 
-    const refreshToken = await createRefreshToken('')
+    const userId = await createOrFindUser(githubUser)
+
+    const accessToken = await createAccessToken(userId)
+
+    const refreshToken = await createRefreshToken(userId)
 
     setCookies(() => {
       return {
         token: token.token,
+        accessToken,
         refreshToken,
       }
     }, c)
